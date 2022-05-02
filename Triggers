@@ -1,0 +1,30 @@
+delimiter $$
+
+CREATE TRIGGER `quien_ingreso_la_información` after insert
+-- que me informe quien ingreso la información después de insertarla
+on `ordenes`
+-- en la tabla ordenes
+for each row
+-- para cada registro
+begin
+	insert into `log_insert_ordenes` 
+    values
+    (null,
+    user(),
+    current_date(),
+    curtime(),
+    concat_ws('-',new.order_id,new.ciudad,new.fecha,new.rider_id));
+end
+$$
+
+delimiter ;
+
+create table log_insert_ordenes
+(
+log_id int not null primary key auto_increment,
+usuario varchar(100),
+fecha date,
+hora TIME,
+registro_insertado varchar (200)
+);
+
